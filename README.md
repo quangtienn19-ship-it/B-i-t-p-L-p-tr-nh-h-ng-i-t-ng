@@ -1,81 +1,79 @@
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
-https://prod.liveshare.vsengsaas.visualstudio.com/join?6B168CABE3E0285BDB169ED828163CAE1AE6
-using System;
-using System.Collections.Generic;
+#include <iostream>
+#include <vector>
+#include <string>
+#include <iomanip>
 
-namespace QuanLySinhVienApp
-{
-    // Bước 1: Tạo lớp SinhVien (Tính đóng gói)
-    class SinhVien
-    {
-        // Các thuộc tính để private (phạm vi truy cập riêng tư)
-        private string msv;
-        private string hoTen;
-        private int tuoi;
+using namespace std;
 
-        // Constructor: Khởi tạo đối tượng có tham số (giống trong ảnh bạn gửi)
-        public SinhVien(string msv, string hoTen, int tuoi)
-        {
-            this.msv = msv;
-            this.hoTen = hoTen;
-            this.tuoi = tuoi;
-        }
+// --- 1. Tính Đóng Gói (Encapsulation) ---
+class Person {
+protected:
+    string name;
+    int age;
+public:
+    Person(string n = "", int a = 0) : name(n), age(a) {}
+    virtual void display() {
+        cout << "Ten: " << left << setw(20) << name << " | Tuoi: " << age;
+    }
+};
 
-        // Constructor không tham sốz
-        public SinhVien() { }
+// --- 2. Tính Kế Thừa (Inheritance) ---
+class Student : public Person {
+private:
+    string studentID;
+    float gpa;
+public:
+    Student(string n, int a, string id, float score) 
+        : Person(n, a), studentID(id), gpa(score) {}
 
-        // Các hành vi (Phương thức)
-        public void DisplaySV()
-        {
-            Console.WriteLine($"MSV: {msv} | Ho Ten: {hoTen} | Tuoi: {tuoi}");
-        }
-
-        // Getter và Setter để truy cập an toàn (Phòng trường hợp bạn cần dùng)
-        public string GetMSV() { return msv; }
-        public void SetHoTen(string ten Moi) { hoTen = tenMoi; }
+    // --- 3. Tính Đa Hình (Polymorphism) ---
+    void display() override {
+        Person::display();
+        cout << " | MSSV: " << setw(10) << studentID << " | GPA: " << gpa << endl;
     }
 
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            // Bước 2: Sử dụng mảng để quản lý (giống dòng 51 trong ảnh)
-            Console.WriteLine("--- Chuong trinh Quan ly Sinh vien ---");
+    string getID() { return studentID; }
+};
 
-            SinhVien[] danhSach = new SinhVien[5];
+class StudentManager {
+private:
+    vector<Student> list;
+public:
+    void addStudent() {
+        string name, id;
+        int age;
+        float gpa;
+        
+        cout << "Nhap ten: "; cin.ignore(); getline(cin, name);
+        cout << "Nhap tuoi: "; cin >> age;
+        cout << "Nhap MSSV: "; cin >> id;
+        cout << "Nhap GPA: "; cin >> gpa;
 
-            // Khởi tạo đối tượng bằng từ khóa 'new'
-            danhSach[0] = new SinhVien("2305htta012", "Nguyen Van A", 19);
-            danhSach[1] = new SinhVien("2305htta014", "Tran Thi B", 20);
+        list.push_back(Student(name, age, id, gpa));
+        cout << "=> Them thanh cong!\n";
+    }
 
-            // Hiển thị thông tin
-            Console.WriteLine("\nThong tin sinh vien 1:");
-            danhSach[0].DisplaySV();
-
-            Console.WriteLine("Thong tin sinh vien 2:");
-            danhSach[1].DisplaySV();
-
-            // Phần nhập thêm sinh viên từ bàn phím (Nếu bạn muốn mở rộng)
-            Console.WriteLine("\nNhap thong tin cho sinh vien thu 3:");
-            Console.Write("Nhap MSV: ");
-            string ma = Console.ReadLine();
-            Console.Write("Nhap Ho ten: ");
-            string ten = Console.ReadLine();
-            Console.Write("Nhap Tuoi: ");
-            int t = int.Parse(Console.ReadLine());
-
-            danhSach[2] = new SinhVien(ma, ten, t);
-
-            Console.WriteLine("\nDanh sach sau khi cap nhat:");
-            for (int i = 0; i < 3; i++)
-            {
-                danhSach[i].DisplaySV();
-            }
-
-            // Dừng màn hình để xem kết quả (Dành cho Visual Studio)
-            Console.WriteLine("\nNhan phim bat ky de thoat...");
-            Console.ReadKey();
+    void showList() {
+        cout << "\n--- DANH SACH SINH VIEN ---\n";
+        for (auto &s : list) {
+            s.display();
         }
     }
+};
+
+int main() {
+    StudentManager sm;
+    int choice;
+
+    do {
+        cout << "\n1. Them sinh vien\n2. Hien thi danh sach\n0. Thoat\nChon: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: sm.addStudent(); break;
+            case 2: sm.showList(); break;
+        }
+    } while (choice != 0);
+
+    return 0;
 }
